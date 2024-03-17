@@ -13,17 +13,20 @@ struct Metrics {
     value: u32,
 }
 
-fn main() -> std::io::Result<()> {
+fn main() {
     let start = Instant::now();
-    let dir = fs::read_dir("D:\\Project\\log-parser\\metrics").unwrap();    
+    let dir = fs::read_dir("D:\\Project\\log-parser\\metrics").unwrap();
 
     let mut counter: u32 = 0;
 
     for file in dir {
         let mut content = String::new();
-        File::open(file.unwrap().path())?.read_to_string(&mut content)?;
+        File::open(file.unwrap().path())
+            .unwrap()
+            .read_to_string(&mut content)
+            .unwrap();
 
-        let result: Vec<Metrics> = serde_json::from_str(&content)?;
+        let result: Vec<Metrics> = serde_json::from_str(&content).unwrap();
 
         for item in result {
             counter += item.value;
@@ -33,6 +36,4 @@ fn main() -> std::io::Result<()> {
     let duration = start.elapsed();
 
     println!("time elasped: {:?}", duration);
-
-    Ok(())
 }
